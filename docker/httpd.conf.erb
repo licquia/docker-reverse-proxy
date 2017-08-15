@@ -13,6 +13,7 @@ LoadModule authz_host_module /usr/lib/apache2/modules/mod_authz_host.so
 LoadModule authz_user_module /usr/lib/apache2/modules/mod_authz_user.so
 LoadModule proxy_module /usr/lib/apache2/modules/mod_proxy.so
 LoadModule proxy_http_module /usr/lib/apache2/modules/mod_proxy_http.so
+LoadModule proxy_wstunnel_module /usr/lib/apache2/modules/mod_proxy_wstunnel.so
 LoadModule remoteip_module /usr/lib/apache2/modules/mod_remoteip.so
 LoadModule mpm_event_module /usr/lib/apache2/modules/mod_mpm_event.so
 LoadModule access_compat_module /usr/lib/apache2/modules/mod_access_compat.so
@@ -38,6 +39,11 @@ CustomLog /dev/stdout combined
   ProxyRequests Off
   ProxyPreserveHost On
   RemoteIPHeader X-Forwarded-For
+
+  <%- unless ENV['WS_PROXY_TARGET_HOST'].to_s.empty? -%>
+  ProxyPass /ws ws://<%= ENV['WS_PROXY_TARGET_HOST'] %>/ws
+  ProxyPassReverse /ws ws://<%= ENV['WS_PROXY_TARGET_HOST'] %>/ws
+  <%- end -%>
 
   ProxyPass / <%= ENV['PROXY_TARGET_URL'] %>
   ProxyPassReverse / <%= ENV['PROXY_TARGET_URL'] %>
