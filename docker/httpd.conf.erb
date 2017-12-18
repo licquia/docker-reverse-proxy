@@ -39,6 +39,7 @@ CustomLog /dev/stdout combined
 <VirtualHost *:8080>
   ProxyRequests Off
   ProxyPreserveHost On
+  ProxyTimeout 6000
   RemoteIPHeader X-Forwarded-For
 
   <%- unless ENV['WS_PROXY_TARGET_HOST'].to_s.empty? -%>
